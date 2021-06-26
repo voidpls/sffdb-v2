@@ -11,6 +11,8 @@ async function getSheets (bot) {
   if (!rawSheets) return
   const sheets = await refactorSheets(rawSheets)
   if (!sheets) return
+  // Set bot status for funsies
+  bot.user.setActivity(`${sheets.length} components`, { type: 'WATCHING' })
   const indexed = await indexSheets(sheets)
   bot.index = indexed
 }
@@ -47,10 +49,10 @@ async function refactorSheets (rawSheets) {
     for (const row of rawSheets[sheet]) {
       row.category = config.sheets.metadata[sheet].category
 
-      // Very hacky workaround for this: https://i.imgur.com/7ojmbuM.png
-      // const hackyCaseKey = Object.keys(row).find(k => k.startsWith('Case\n'))
-      // if (hackyCaseKey) row.Case = row[hackyCaseKey]
-      // No longer needed
+      // hacky workaround for mobos not indexing properly
+      if (row.category === 'Mobos (ITX)') {
+        row.Chipset_INDEX = `${row.Brand} ${row.Chipset}`
+      }
 
       sheetsArray.push(row)
     }

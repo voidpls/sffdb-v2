@@ -9,6 +9,7 @@ exports.run = async (bot, msg, args) => {
     const error = '**Error:** Database not initliazed yet. Try again later.'
     return msg.channel.send(error)
   }
+  if (!query) return msg.channel.send('You must specify a search query.')
   // Search index for matches
   const res = bot.index.search(query)
   if (res.length === 0) return msg.channel.send('No results found.')
@@ -117,6 +118,10 @@ async function selectComponent (bot, msg, res, category) {
 }
 
 async function componentInfo (bot, msg, component) {
+  if (collectors.get(msg.author.id)) {
+    collectors.get(msg.author.id).stop('Collector overlap')
+  } // Check if user already has active collector, disables it
+
   console.log(component.item)
   const template = config.sheets.formatting[component.item.category]
   if (!template) {
@@ -126,14 +131,16 @@ async function componentInfo (bot, msg, component) {
   }
   // console.log(template)
   // Use regex to replace placeholders in template with real component data
-  const title = template.title.replace(/{{(.*?)}}/g, (match, $1) => {
-    return component.item[$1]
+  const title = template.title.replace(/{{(.*?)}}/gs, (match, $1) => {
+    if (!component.item[$1]) return '-'
+    return component.item[$1].replace(/\n/g, ' ')
   })
-  const desc = template.desc.replace(/{{(.*?)}}/g, (match, $1) => {
-    return component.item[$1]
+  const desc = template.desc.replace(/{{(.*?)}}/gs, (match, $1) => {
+    if (!component.item[$1]) return '-'
+    return component.item[$1].replace(/\n/g, ' ')
   })
 
-  const embed = new MessageEmbed()
+  const infoEmbed = new MessageEmbed()
     .setAuthor(
       bot.user.username,
       bot.user.avatarURL({ dynamic: true, size: 128, format: 'png' })
@@ -141,8 +148,29 @@ async function componentInfo (bot, msg, component) {
     .setTitle(title)
     .setDescription(desc)
     .setColor(config.bot.color)
+    .setFooter('Type "exit" to remove this message')
 
-  msg.channel.send(embed)
+  // Collector filter
+  const filter = m => {
+    if (m.author.id !== msg.author.id) return false
+    if (m.content.toLowerCase() === 'exit') return true
+  }
+  // Message collector
+  const m = await msg.channel.send(infoEmbed)
+  const collector = await m.channel.createMessageCollector(filter, {
+    max: 1,
+    time: 30000
+  })
+  collectors.set(msg.author.id, collector)
+  // Process user input
+  collector.on('collect', async col => {
+    await col.delete().catch(e => {})
+    await m.delete()
+    const input = col.content.toLowerCase()
+    if (input === 'exit') return
+  })
+  // Delete collector from col. map once it's ended
+  collector.on('end', () => collectors.delete(msg.author.id))
 }
 
 exports.help = {
