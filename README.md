@@ -1,1 +1,1 @@
-# Discord Bot for Querying the SFF Google Sheets
+# Discord Bot for Querying the SFF Google Sheet
