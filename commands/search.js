@@ -175,6 +175,6 @@ async function componentInfo (bot, msg, component) {
 
 exports.help = {
   name: 'search',
-  aliases: ['find', 'get'],
-  description: 'Looks up a component from the SFF Google Sheets'
+  aliases: ['find', 'get', 'query'],
+  description: 'Look up a component'
 }
