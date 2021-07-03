@@ -4,6 +4,8 @@
   "description": "",
   "main": "bot.js",
   "scripts": {
+    "start": "node bot.js",
+	"build": "touch .env",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
