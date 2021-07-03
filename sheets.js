@@ -27,7 +27,7 @@ async function downloadSheets () {
     spreadsheetKey: config.sheets.key,
     sheetsToExtract: Object.keys(config.sheets.metadata),
     credentials: {
-      private_key: SHEETS_PRIVATE_KEY,
+      private_key: SHEETS_PRIVATE_KEY.replace(/\\n/g, "\n"),
       client_email: SHEETS_SERVICE_EMAIL
     }
   })
