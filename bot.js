@@ -1,6 +1,6 @@
 require('dotenv').config()
 const config = require('./config.js').config()
-const { BOT_TOKEN } = process.env
+const { BOT_TOKEN, BOT_PREFIX } = process.env
 const { Client, Collection } = require('discord.js')
 const fs = require('fs-extra')
 const sheets = require('./sheets.js')
@@ -46,9 +46,9 @@ bot.on('message', async msg => {
     return
   }
 
-  if (!msg.content.startsWith(config.bot.prefix)) return
+  if (!msg.content.startsWith(BOT_PREFIX)) return
   const prefixless = msg.content
-    .slice(config.bot.prefix.length)
+    .slice(BOT_PREFIX.length)
     .trim()
     .split(' ')
   const cmd = prefixless[0].toLowerCase()

@@ -125,7 +125,6 @@ exports.config = () => {
     },
     // Core bot configuration
     bot: {
-      prefix: 'db.', // Bot prefix
       color: 'e6e7e9', // Bot theme color (hex)
       disabledEvents: [
         'GUILD_ROLE_CREATE',
