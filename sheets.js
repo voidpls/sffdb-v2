@@ -1,6 +1,5 @@
 const config = require('./config.js').config()
 const { SHEETS_SERVICE_EMAIL, SHEETS_PRIVATE_KEY } = process.env
-console.log(SHEETS_PRIVATE_KEY)
 const { promisify } = require('util')
 const extractSheets = promisify(require('spreadsheet-to-json').extractSheets)
 const Fuse = require('fuse.js')
