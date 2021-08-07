@@ -4,11 +4,11 @@ const { MessageEmbed } = require('discord.js')
 const collectors = new Map() // All collectors, by user ID
 
 exports.run = async (bot, int) => {
-  const query = int.options.getString('query', true)
+  const query = int.options.getString('query', true).trim()
   if (!bot.index) {
     const error = 'Database not initliazed yet. Try again later.'
     return await int.reply({ content: error, ephemeral: true })
-  }
+  } // Check if index object exists
   if (!query) {
     const error = 'You must specify a search query.'
     return await int.reply({ content: error, ephemeral: true })
@@ -17,9 +17,7 @@ exports.run = async (bot, int) => {
   // Search index for matches
   const res = bot.index.search(query)
   if (res.length === 0) return await int.reply('No results found.')
-  if (res.length === 1) {
-    return await componentInfo(bot, int, components[parseInt(input) - 1])
-  } // 1 RESULT, NO PROMPTS
+  if (res.length === 1) return await componentInfo(bot, int, res[0]) // 1 RESULT, NO PROMPTS
 
   const categories = _.uniqBy(res, 'item.category').map(e => e.item.category)
 
@@ -56,7 +54,8 @@ async function selectCategory (bot, int, res, categories) {
   }
   // Message collector
   const m = await int.reply({ embeds: [categoryEmbed] })
-  const collector = await int.channel.createMessageCollector(filter, {
+  const collector = await int.channel.createMessageCollector({
+    filter: filter,
     max: 1,
     time: 30000
   })
@@ -105,8 +104,11 @@ async function selectComponent (bot, int, res, category) {
     const num = parseInt(m.content)
     if (num && num <= components.length && num >= 1) return true
   }
-  const m = await int.editReply({ embeds: [componentEmbed] })
-  const collector = await m.channel.createMessageCollector(filter, {
+  const m = await (int.replied
+    ? int.editReply({ embeds: [componentEmbed] })
+    : int.reply({ embeds: [componentEmbed] }))
+  const collector = await int.channel.createMessageCollector({
+    filter: filter,
     max: 1,
     time: 30000
   })
@@ -129,9 +131,8 @@ async function componentInfo (bot, int, component) {
 
   const template = config.sheets.formatting[component.item.category]
   if (!template) {
-    return int.editReply(
-      `Could not display info. Template type \`${component.item.category}\` not found.`
-    )
+    const text = `Could not display info. Template type \`${component.item.category}\` not found.`
+    const m = await (int.replied ? int.editReply(text) : int.reply(text))
   }
   // console.log(template)
   // Use regex to replace placeholders in template with real component data
@@ -160,8 +161,11 @@ async function componentInfo (bot, int, component) {
     if (m.content.toLowerCase() === 'exit') return true
   }
   // Message collector
-  const m = await int.editReply({ embeds: [infoEmbed] })
-  const collector = await m.channel.createMessageCollector(filter, {
+  const m = await (int.replied
+    ? int.editReply({ embeds: [infoEmbed] })
+    : int.reply({ embeds: [infoEmbed] }))
+  const collector = await int.channel.createMessageCollector({
+    filter: filter,
     max: 1,
     time: 30000
   })

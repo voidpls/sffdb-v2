@@ -52,7 +52,6 @@ bot.once('ready', async () => {
 })
 
 // Discord command handler
-
 bot.on('messageCreate', async msg => {
   if (msg.author.id === bot.user.id || msg.author.bot) return
   const allowedChannelTypes = [
@@ -85,17 +84,7 @@ bot.on('interactionCreate', async interaction => {
 
   const cmd = interaction.commandName
   const cmdFile = bot.slashCommands.get(cmd)
-  if (cmdFile) {
-    try {
-      await cmdFile.run(bot, interaction)
-    } catch (e) {
-      console.error(e)
-      await interaction.reply({
-        content: 'Command failed.',
-        ephemeral: true
-      })
-    }
-  }
+  if (cmdFile) return cmdFile.run(bot, interaction)
 })
 
 bot.on('error', console.error)
