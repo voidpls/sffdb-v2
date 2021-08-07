@@ -12,7 +12,9 @@ async function getSheets (bot) {
   const sheets = await refactorSheets(rawSheets)
   if (!sheets) return
   // Set bot status for funsies
-  bot.user.setActivity(`${sheets.length} components`, { type: 'WATCHING' })
+  bot.user.setActivity(`${sheets.length} components`, {
+    type: 'WATCHING'
+  })
   const indexed = await indexSheets(sheets)
   bot.index = indexed
 }
@@ -26,7 +28,7 @@ async function downloadSheets () {
     spreadsheetKey: config.sheets.key,
     sheetsToExtract: Object.keys(config.sheets.metadata),
     credentials: {
-      private_key: SHEETS_PRIVATE_KEY.replace(/\\n/g, "\n"),
+      private_key: SHEETS_PRIVATE_KEY.replace(/\\n/g, '\n'),
       client_email: SHEETS_SERVICE_EMAIL
     }
   })
