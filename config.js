@@ -1,6 +1,10 @@
 exports.config = () => {
   return {
-    // Configuration for Google Sheets
+    // Core bot configuration
+    bot: {
+      color: 'e6e7e9' // Bot theme color (hex)
+    },
+    // Configuration for Google Sheets parsing
     sheets: {
       key: '1AddRvGWJ_f4B6UC7_IftDiVudVc8CJ8sxLUqlxVsCz4', // Key of the Google Sheets document
       indexes: [
@@ -122,10 +126,6 @@ exports.config = () => {
             '**Notes**: {{Remarks}}'
         }
       }
-    },
-    // Core bot configuration
-    bot: {
-      color: 'e6e7e9' // Bot theme color (hex)
     }
   }
 }

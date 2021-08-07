@@ -2,9 +2,21 @@ const config = require('../config.js').config()
 const _ = require('lodash')
 const { MessageEmbed } = require('discord.js')
 const collectors = new Map() // All collectors, by user ID
+const { CHANNEL_WHITELIST } = process.env
 
 exports.run = async (bot, int) => {
   const query = int.options.getString('query', true).trim()
+
+  const guildChannels = await int.guild.channels.fetch()
+  const whitelist = CHANNEL_WHITELIST.split(',')
+  const guildWhitelist = whitelist.filter(channel => guildChannels.has(channel))
+  if (guildWhitelist && !guildWhitelist.includes(int.channel.id)) {
+    const error =
+      "You can't use that in this channel!\n\nPermitted channels:\n" +
+      `${guildWhitelist.map(channel => `<#${channel}>`).join('\n')}`
+    return int.reply({ content: error, ephemeral: true })
+  }
+
   if (!bot.index) {
     const error = 'Database not initliazed yet. Try again later.'
     return await int.reply({ content: error, ephemeral: true })
