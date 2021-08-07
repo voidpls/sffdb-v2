@@ -18,7 +18,7 @@ exports.run = async (bot, msg, args) => {
     .setTitle('Bot Help')
     .setDescription(cmds.join('\n'))
     .setFooter(`Contact ${author.tag} with any issues`)
-  msg.channel.send(embed)
+  msg.channel.send({ embeds: [embed] })
 }
 
 exports.help = {
