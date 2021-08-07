@@ -10,7 +10,7 @@ exports.run = async (bot, int) => {
   const guildChannels = await int.guild.channels.fetch()
   const whitelist = CHANNEL_WHITELIST.split(',')
   const guildWhitelist = whitelist.filter(channel => guildChannels.has(channel))
-  if (guildWhitelist && !guildWhitelist.includes(int.channel.id)) {
+  if (guildWhitelist?.length && !guildWhitelist.includes(int.channel.id)) {
     const error =
       "You can't use that in this channel!\n\nPermitted channels:\n" +
       `${guildWhitelist.map(channel => `<#${channel}>`).join('\n')}`
