@@ -137,7 +137,7 @@ exports.config = () => {
             '**Thickness:** {{Slots}} slots ({{Height / Thickness (mm)}}mm)\n' +
             '**Cooler**:\n' +
             '<:blank:858431977011281921> Fans: {{Fans}}\n' +
-            '<:blank:858431977011281921> Blower: {{Blower}}\n' +
+            '<:blank:858431977011281921> Blower: {{Blower}}\n'
             // '<:blank:858431977011281921> Low Profile: {{Low Profile}}\n' +
             // '**Connectivity**:\n' +
             // '<:blank:858431977011281921> HDMI/DP/DVI-D: {{HDMI}} / {{DisplayPort}} / {{DVI-D}}\n' +
