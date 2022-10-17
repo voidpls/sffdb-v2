@@ -147,7 +147,6 @@ function applyTemplate (component) {
     return component.item[$1].replace(/\n/g, ' ')
   })
   const desc = template.desc.replace(/{{(.*?)}}/gs, (match, $1) => {
-    console.log($1)
     if (component.item[$1] === 'Y') return 'Yes'
     if (!component.item[$1]) return '-'
     return component.item[$1].replace(/\n/g, ' ')
