@@ -139,9 +139,9 @@ exports.config = () => {
             '<:blank:858431977011281921> Fans: {{Fans}}\n' +
             '<:blank:858431977011281921> Blower: {{Blower}}\n' +
             // '<:blank:858431977011281921> Low Profile: {{Low Profile}}\n' +
-            '**Connectivity**:\n' +
-            '<:blank:858431977011281921> HDMI/DP/DVI-D: {{HDMI}} / {{DisplayPort}} / {{DVI-D}}\n' +
-            '<:blank:858431977011281921> USB-C: {{USB-C}}\n'
+            // '**Connectivity**:\n' +
+            // '<:blank:858431977011281921> HDMI/DP/DVI-D: {{HDMI}} / {{DisplayPort}} / {{DVI-D}}\n' +
+            // '<:blank:858431977011281921> USB-C: {{USB-C}}\n'
             // '<:blank:858431977011281921> PCIe Power: {{PCIe Pins}}\n'
         }
       }
