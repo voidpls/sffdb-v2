@@ -80,10 +80,16 @@ async function refactorSheets (rawSheets) {
           row.INDEX = `${row.Brand} ${row.Chipset}`
           row.INDEX_SECONDARY = `${row.Name}`
           break
-        case 'Graphics Cards':
-          row.INDEX = `${row.Brand} ${row.simpleModel} ${row.Name}`
-          // row.INDEX_SECONDARY = ''
+        case 'Graphics Cards': {
+          const cleanName = row.Name
+            .replaceAll(row.simpleModel, '')
+            .replaceAll('ROG Strix', 'Strix') // lmao asus
+          row.INDEX = `${row.Brand} ${row.simpleModel} ${cleanName}`
+          const cleanerName = cleanName
+            .replaceAll(/gaming/gi, '') // experimental, "gaming" in every single name skews results
+          row.INDEX_SECONDARY = `${cleanerName} ${row.simpleModel} ${row.Brand}`
           break
+        }
       }
 
       sheetsArray.push(row)
@@ -99,6 +105,7 @@ async function indexSheets (sheets) {
     keys: ['INDEX', 'INDEX_SECONDARY'],
     includeScore: true,
     threshold: 0.4
+    // distance: 150
   } // Configuration for fuzzy search index
   // const index = Fuse.createIndex(config.sheets.indexes, sheets)
   const fuse = new Fuse(sheets, options)
