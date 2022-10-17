@@ -147,6 +147,8 @@ function applyTemplate (component) {
     return component.item[$1].replace(/\n/g, ' ')
   })
   const desc = template.desc.replace(/{{(.*?)}}/gs, (match, $1) => {
+    console.log($1)
+    if (component.item[$1] === 'Y') return 'Yes'
     if (!component.item[$1]) return '-'
     return component.item[$1].replace(/\n/g, ' ')
   })
@@ -164,16 +166,17 @@ async function componentInfo (bot, int, component) {
     const text = `Could not display info. Template type \`${component.item.category}\` not found.`
     await (int.replied ? int.editReply(text) : int.reply(text))
   }
+  const { title, desc } = formattedData
   // console.log(template)
   // Use regex to replace placeholders in template with real component data
-  const title = formattedData.title.replace(/{{(.*?)}}/gs, (match, $1) => {
-    if (!component.item[$1]) return '-'
-    return component.item[$1].replace(/\n/g, ' ')
-  })
-  const desc = formattedData.desc.replace(/{{(.*?)}}/gs, (match, $1) => {
-    if (!component.item[$1]) return '-'
-    return component.item[$1].replace(/\n/g, ' ')
-  })
+  // const title = formattedData.title.replace(/{{(.*?)}}/gs, (match, $1) => {
+  //   if (!component.item[$1]) return '-'
+  //   return component.item[$1].replace(/\n/g, ' ')
+  // })
+  // const desc = formattedData.desc.replace(/{{(.*?)}}/gs, (match, $1) => {
+  //   if (!component.item[$1]) return '-'
+  //   return component.item[$1].replace(/\n/g, ' ')
+  // })
 
   const infoEmbed = new MessageEmbed()
     .setAuthor({
