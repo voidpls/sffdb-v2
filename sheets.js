@@ -52,8 +52,38 @@ async function refactorSheets (rawSheets) {
       row.category = config.sheets.metadata[sheet].category
 
       // hacky workaround for mobos not indexing properly
-      if (row.category === 'Mobos (ITX)') {
-        row.Chipset_INDEX = `${row.Brand} ${row.Chipset}`
+      // if (row.category === 'Mobos (ITX)') {
+      //   row.Chipset_INDEX = `${row.Brand} ${row.Chipset}`
+      // }
+      if (row.category === 'Graphics Cards') {
+        const memoryMatch = row.Model.match(/\s(GDDR[^\s]+)/)
+        row.Memory = memoryMatch ? memoryMatch[1] : '' // => GDDR6
+        row.Model = row.Model.replaceAll(/\sGDDR[^\s]+/g, '') // RTX 2080 Ti 11GB GDDR6 => RTX 2080 Ti 11GB
+        const modelMatch = row.Model.match(/\s(.+?)\s\d+GB/)
+        row.simpleModel = modelMatch ? modelMatch[1] : '' // RTX 2080 Ti 11GB => 2080 Ti
+      }
+
+      switch (row.category) {
+        case 'Cases':
+          row.INDEX = `${row.Seller} ${row.Case}`
+          break
+        case 'Coolers (Air)':
+          row.INDEX = `${row.Brand} ${row.Cooler}`
+          break
+        case 'Coolers (AIO)':
+          row.INDEX = `${row.Brand} ${row.Model}`
+          break
+        case 'Slim Fans':
+          row.INDEX = `${row.Brand} ${row.Model}`
+          break
+        case 'Mobos (ITX)':
+          row.INDEX = `${row.Brand} ${row.Chipset}`
+          row.INDEX_SECONDARY = `${row.Name}`
+          break
+        case 'Graphics Cards':
+          row.INDEX = `${row.Brand} ${row.simpleModel} ${row.Name}`
+          // row.INDEX_SECONDARY = ''
+          break
       }
 
       sheetsArray.push(row)
@@ -65,7 +95,8 @@ async function refactorSheets (rawSheets) {
 // Index sheets into fuzzy search engine
 async function indexSheets (sheets) {
   const options = {
-    keys: config.sheets.indexes,
+    // keys: config.sheets.indexes,
+    keys: ['INDEX', 'INDEX_SECONDARY'],
     includeScore: true,
     threshold: 0.4
   } // Configuration for fuzzy search index

@@ -7,16 +7,17 @@ exports.config = () => {
     // Configuration for Google Sheets parsing
     sheets: {
       key: '1AddRvGWJ_f4B6UC7_IftDiVudVc8CJ8sxLUqlxVsCz4', // Key of the Google Sheets document
-      indexes: [
-        'Seller',
-        'Case',
-        'Brand',
-        'Model',
-        'Cooler',
-        'Name',
-        'Chipset_INDEX', // part of hacky mobo index fix
-        'GPU'
-      ], // The columns in which information will be indexed
+      // indexes: [
+      // 'Seller',
+      // 'Case',
+      // 'Brand',
+      // 'Model',
+      // 'Cooler',
+      // 'Name',
+      // 'Chipset_INDEX', // part of hacky mobo index fix
+      // 'GPU_INDEX' // gpu index fix
+
+      // ], // The columns in which information will be indexed
       metadata: {
         // Configure the sheets that are to be downloaded and indexed
         'SFF Case <10L': {
@@ -39,16 +40,16 @@ exports.config = () => {
         },
         'mITX Boards': {
           category: 'Mobos (ITX)' // if change, need to change sheets.js hardcoded mobo fix
+        },
+        'SFF GPU <215mm': {
+          category: 'Graphics Cards'
+        },
+        'GPU >215mm': {
+          category: 'Graphics Cards'
         }
-        // 'SFF GPU <215mm': {
-        //   category: 'GPUs'
-        // },
-        // 'GPU >215mm': {
-        //   category: 'GPUs'
-        // }
       },
-      brandTitles: ['Seller', 'Brand'],
-      modelTitles: ['Case', 'Cooler', 'Model', 'Name'],
+      // brandTitles: ['Seller', 'Brand'],
+      // modelTitles: ['Case', 'Cooler', 'Model', 'Name'],
       formatting: {
         // Configure message formatting by category
         Cases: {
@@ -111,9 +112,8 @@ exports.config = () => {
           title: '{{Brand}} {{Name}}',
           desc:
             '**Socket/Chipset**: {{CPU}} {{Socket}} - {{Chipset}}\n' +
-            '**CPU OC**: {{CPU Overclock}}\n' +
-            '**RAM OC**: {{RAM Overclock}}\n' +
-            '**RAM Support**: {{RAM Slots}} Slots - {{Supported RAM Capacity (GB)}}GB {{RAM Type}} - {{Supported Memory Speed (MT/s)}} MHz\n' +
+            '**OC Support (CPU/RAM)**: {{CPU Overclock}} / {{RAM Overclock}}\n' +
+            '**RAM Support**: {{RAM Slots}} Slots - {{Supported RAM Capacity (GB)}}GB {{RAM Type}} - {{Supported Memory Speed (Mbps)}} MHz\n' +
             '**Connectivity**:\n' +
             '<:blank:858431977011281921> USB Ports: {{Total USB Ports}}\n' +
             '<:blank:858431977011281921> USB-C Header: {{USB-C Header}}\n' +
@@ -122,9 +122,27 @@ exports.config = () => {
             '<:blank:858431977011281921> Bluetooth: {{Bluetooth}}\n' +
             '<:blank:858431977011281921> M.2 SSD Slots: {{M.2 (Key-M) NVMe/SATA SSD Slot\nGreen=Front\nRed=Back}}\n' +
             '<:blank:858431977011281921> SATA Ports: {{SATA 3.0 Ports}}\n' +
-            '**PCIe Gen**: {{PCIe Gen}}\n' +
-            '**Bifurcation**: {{Bifurcation Support}}\n' +
+            // '**PCIe Gen**: {{PCIe Gen}}\n' +
+            '**PCIe Slots**: {{PCIe x16 Slot}}\n' +
+            '**Bifurcation**: {{PCIe Bifurcation Support}}\n' +
             '**Notes**: {{Remarks}}'
+        },
+        'Graphics Cards': {
+          title: '{{Brand}} {{Model}} - {{Name}}',
+          desc:
+            '**Boost Clock**: {{Boost Clock (MHz)}} Mhz\n' +
+            '**VRAM**: {{Memory}} ({{Memory Speed (Gbps)}} Gbps)\n' +
+            '**TDP**: {{TDP (W)}}W\n' +
+            '**L × W:** {{Length (mm)}} × {{Width (mm)}}mm\n' +
+            '**Thickness:** {{Slots}} slots ({{Height / Thickness (mm)}}mm)\n' +
+            '**Cooler**:\n' +
+            '<:blank:858431977011281921> Fans: {{Fans}}\n' +
+            '<:blank:858431977011281921> Blower: {{Blower}}\n' +
+            // '<:blank:858431977011281921> Low Profile: {{Low Profile}}\n' +
+            '**Connectivity**:\n' +
+            '<:blank:858431977011281921> HDMI/DP/DVI-D: {{HDMI}} / {{DisplayPort}} / {{DVI-D}}\n' +
+            '<:blank:858431977011281921> USB-C: {{USB-C}}\n'
+            // '<:blank:858431977011281921> PCIe Power: {{PCIe Pins}}\n'
         }
       }
     }

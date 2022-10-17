@@ -49,13 +49,13 @@ async function selectCategory (bot, int, res, categories) {
   const desc = categories.map((c, i) => `\`[${i + 1}]\` ${c}`)
 
   const categoryEmbed = new MessageEmbed()
-    .setAuthor(
-      bot.user.username,
-      bot.user.avatarURL({ dynamic: true, size: 128, format: 'png' })
-    )
+    .setAuthor({
+      name: bot.user.username,
+      url: bot.user.avatarURL({ dynamic: true, size: 128, format: 'png' })
+    })
     .setDescription('**Type a # to select a category**\n\n' + desc.join('\n'))
     .setColor(config.bot.color)
-    .setFooter('Or type "exit" to close this prompt')
+    .setFooter({ text: 'Or type "exit" to close this prompt' })
 
   // Collector filter
   const filter = m => {
@@ -91,24 +91,26 @@ async function selectComponent (bot, int, res, category) {
   const components = res.filter(entry => entry.item.category === category)
   if (components.length === 1) return componentInfo(bot, int, components[0])
   if (components.length > 9) components.length = 9
+  // console.log(components)
   const desc = components.map((c, i) => {
-    const brandKey = Object.keys(c.item).find(k =>
-      config.sheets.brandTitles.includes(k)
-    )
-    const modelKey = Object.keys(c.item).find(k =>
-      config.sheets.modelTitles.includes(k)
-    )
-    return `\`[${i + 1}]\` ${c.item[brandKey]} - ${c.item[modelKey]}`
+    // const brandKey = Object.keys(c.item).find(k =>
+    //   config.sheets.brandTitles.includes(k)
+    // )
+    // const modelKey = Object.keys(c.item).find(k =>
+    //   config.sheets.modelTitles.includes(k)
+    // )
+    // return `\`[${i + 1}]\` ${c.item[brandKey]} - ${c.item[modelKey]}`
+    return `\`[${i + 1}]\` ${applyTemplate(c).title}`
   })
 
   const componentEmbed = new MessageEmbed()
-    .setAuthor(
-      bot.user.username,
-      bot.user.avatarURL({ dynamic: true, size: 128, format: 'png' })
-    )
+    .setAuthor({
+      name: bot.user.username,
+      url: bot.user.avatarURL({ dynamic: true, size: 128, format: 'png' })
+    })
     .setDescription('**Type a # to select a component**\n\n' + desc.join('\n'))
     .setColor(config.bot.color)
-    .setFooter('Or type "exit" to close this prompt')
+    .setFooter({ text: 'Or type "exit" to close this prompt' })
 
   const filter = m => {
     if (m.author.id !== int.user.id) return false
@@ -136,18 +138,10 @@ async function selectComponent (bot, int, res, category) {
   collector.on('end', () => collectors.delete(int.user.id))
 }
 
-async function componentInfo (bot, int, component) {
-  if (collectors.get(int.user.id)) {
-    collectors.get(int.user.id).stop('Collector overlap')
-  } // Check if user already has active collector, disables it
-
+function applyTemplate (component) {
   const template = config.sheets.formatting[component.item.category]
-  if (!template) {
-    const text = `Could not display info. Template type \`${component.item.category}\` not found.`
-    await (int.replied ? int.editReply(text) : int.reply(text))
-  }
-  // console.log(template)
-  // Use regex to replace placeholders in template with real component data
+  if (!template) return null
+
   const title = template.title.replace(/{{(.*?)}}/gs, (match, $1) => {
     if (!component.item[$1]) return '-'
     return component.item[$1].replace(/\n/g, ' ')
@@ -157,15 +151,39 @@ async function componentInfo (bot, int, component) {
     return component.item[$1].replace(/\n/g, ' ')
   })
 
+  return { title, desc }
+}
+
+async function componentInfo (bot, int, component) {
+  if (collectors.get(int.user.id)) {
+    collectors.get(int.user.id).stop('Collector overlap')
+  } // Check if user already has active collector, disables it
+
+  const formattedData = applyTemplate(component)
+  if (!formattedData) {
+    const text = `Could not display info. Template type \`${component.item.category}\` not found.`
+    await (int.replied ? int.editReply(text) : int.reply(text))
+  }
+  // console.log(template)
+  // Use regex to replace placeholders in template with real component data
+  const title = formattedData.title.replace(/{{(.*?)}}/gs, (match, $1) => {
+    if (!component.item[$1]) return '-'
+    return component.item[$1].replace(/\n/g, ' ')
+  })
+  const desc = formattedData.desc.replace(/{{(.*?)}}/gs, (match, $1) => {
+    if (!component.item[$1]) return '-'
+    return component.item[$1].replace(/\n/g, ' ')
+  })
+
   const infoEmbed = new MessageEmbed()
-    .setAuthor(
-      bot.user.username,
-      bot.user.avatarURL({ dynamic: true, size: 128, format: 'png' })
-    )
+    .setAuthor({
+      name: bot.user.username,
+      url: bot.user.avatarURL({ dynamic: true, size: 128, format: 'png' })
+    })
     .setTitle(title)
     .setDescription(desc)
     .setColor(config.bot.color)
-    .setFooter('Type "exit" to remove this message')
+    .setFooter({ text: 'Type "exit" to close this prompt' })
 
   // Collector filter
   const filter = m => {
