@@ -65,9 +65,9 @@ async function selectCategory (bot, int, res, categories) {
     if (num && num <= categories.length && num >= 1) return true
   }
   // Message collector
-  const m = await int.reply({ embeds: [categoryEmbed] })
+  await int.reply({ embeds: [categoryEmbed] })
   const collector = await int.channel.createMessageCollector({
-    filter: filter,
+    filter,
     max: 1,
     time: 30000
   })
@@ -116,11 +116,11 @@ async function selectComponent (bot, int, res, category) {
     const num = parseInt(m.content)
     if (num && num <= components.length && num >= 1) return true
   }
-  const m = await (int.replied
+  await (int.replied
     ? int.editReply({ embeds: [componentEmbed] })
     : int.reply({ embeds: [componentEmbed] }))
   const collector = await int.channel.createMessageCollector({
-    filter: filter,
+    filter,
     max: 1,
     time: 30000
   })
@@ -144,7 +144,7 @@ async function componentInfo (bot, int, component) {
   const template = config.sheets.formatting[component.item.category]
   if (!template) {
     const text = `Could not display info. Template type \`${component.item.category}\` not found.`
-    const m = await (int.replied ? int.editReply(text) : int.reply(text))
+    await (int.replied ? int.editReply(text) : int.reply(text))
   }
   // console.log(template)
   // Use regex to replace placeholders in template with real component data
@@ -173,11 +173,11 @@ async function componentInfo (bot, int, component) {
     if (m.content.toLowerCase() === 'exit') return true
   }
   // Message collector
-  const m = await (int.replied
+  await (int.replied
     ? int.editReply({ embeds: [infoEmbed] })
     : int.reply({ embeds: [infoEmbed] }))
   const collector = await int.channel.createMessageCollector({
-    filter: filter,
+    filter,
     max: 1,
     time: 30000
   })

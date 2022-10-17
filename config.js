@@ -64,6 +64,7 @@ exports.config = () => {
             '<:blank:858431977011281921> Thickness: {{GPU Height / Thickness (mm)}}mm / {{PCIe Slot}} slot(s)\n' +
             '<:blank:858431977011281921> L×W: {{GPU Length (mm)}} × {{GPU Width (mm)}}mm\n' +
             '**PSU Support**: {{PSU}}\n' +
+            // eslint-disable-next-line no-template-curly-in-string
             '**Price (USD)**: ${{Price (USD)}}'
         },
         'Coolers (AIO)': {

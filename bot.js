@@ -1,5 +1,5 @@
 require('dotenv').config()
-const config = require('./config.js').config()
+// const config = require('./config.js').config()
 const { BOT_TOKEN, BOT_PREFIX } = process.env
 const { Client, Collection, Intents } = require('discord.js')
 const fs = require('fs-extra')
