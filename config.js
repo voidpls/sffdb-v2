@@ -7,17 +7,6 @@ exports.config = () => {
     // Configuration for Google Sheets parsing
     sheets: {
       key: '1AddRvGWJ_f4B6UC7_IftDiVudVc8CJ8sxLUqlxVsCz4', // Key of the Google Sheets document
-      // indexes: [
-      // 'Seller',
-      // 'Case',
-      // 'Brand',
-      // 'Model',
-      // 'Cooler',
-      // 'Name',
-      // 'Chipset_INDEX', // part of hacky mobo index fix
-      // 'GPU_INDEX' // gpu index fix
-
-      // ], // The columns in which information will be indexed
       metadata: {
         // Configure the sheets that are to be downloaded and indexed
         'SFF Case <10L': {
@@ -48,8 +37,6 @@ exports.config = () => {
           category: 'Graphics Cards'
         }
       },
-      // brandTitles: ['Seller', 'Brand'],
-      // modelTitles: ['Case', 'Cooler', 'Model', 'Name'],
       formatting: {
         // Configure message formatting by category
         Cases: {
@@ -122,7 +109,6 @@ exports.config = () => {
             '<:blank:858431977011281921> Bluetooth: {{Bluetooth}}\n' +
             '<:blank:858431977011281921> M.2 SSD Slots: {{M.2 (Key-M) NVMe/SATA SSD Slot\nGreen=Front\nRed=Back}}\n' +
             '<:blank:858431977011281921> SATA Ports: {{SATA 3.0 Ports}}\n' +
-            // '**PCIe Gen**: {{PCIe Gen}}\n' +
             '**PCIe Slots**: {{PCIe x16 Slot}}\n' +
             '**Bifurcation**: {{PCIe Bifurcation Support}}\n' +
             '**Notes**: {{Remarks}}'
@@ -135,14 +121,8 @@ exports.config = () => {
             '**TDP**: {{TDP (W)}}W\n' +
             '**L × W:** {{Length (mm)}} × {{Width (mm)}}mm\n' +
             '**Thickness:** {{Slots}} slots ({{Height / Thickness (mm)}}mm)\n' +
-            // '**Cooler**:\n' +
             '**GPU Fans**: {{Fans}}\n' +
             '**Watercooled**: {{Watercooled}}'
-            // '<:blank:858431977011281921> Low Profile: {{Low Profile}}\n' +
-            // '**Connectivity**:\n' +
-            // '<:blank:858431977011281921> HDMI/DP/DVI-D: {{HDMI}} / {{DisplayPort}} / {{DVI-D}}\n' +
-            // '<:blank:858431977011281921> USB-C: {{USB-C}}\n'
-            // '<:blank:858431977011281921> PCIe Power: {{PCIe Pins}}\n'
         }
       }
     }
