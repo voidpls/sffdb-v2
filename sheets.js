@@ -2,7 +2,7 @@ const config = require('./config.js').config()
 const { SHEETS_SERVICE_EMAIL, SHEETS_PRIVATE_KEY } = process.env
 const { promisify } = require('util')
 const extractSheets = promisify(require('spreadsheet-to-json').extractSheets)
-const Fuse = require('fuse.js')
+// const Fuse = require('fuse.js')
 const timeFormat = hrend => ~~(hrend[0] * 1000 + hrend[1] / 10e5)
 
 // Main function: Grab and process Sheets
@@ -15,8 +15,11 @@ async function getSheets (bot) {
   bot.user.setActivity(`${sheets.length} components`, {
     type: 'WATCHING'
   })
-  const indexed = await indexSheets(sheets)
-  bot.index = indexed
+
+  const arrMemSize = require('object-sizeof')(sheets)
+  const arrMemSizeFormatted = ~~(arrMemSize / 1e5) / 10
+  console.info(`[SHEETS] ${sheets.length} total entries, taking up ${arrMemSizeFormatted} MB`)
+  bot.index = sheets
 }
 
 // Download all sheets in the Google Sheets document
@@ -43,18 +46,16 @@ async function downloadSheets () {
 }
 
 // Refactor sheets object, to prepare for indexing
+// Makes one big array with every row from the sheets
+// Not pretty but gets the job done
 async function refactorSheets (rawSheets) {
   const sheetsArray = []
-  // Makes one big array with every row from the sheets
-  // Not pretty but gets the job done
+
   for (const sheet of Object.keys(rawSheets)) {
     for (const row of rawSheets[sheet]) {
       row.category = config.sheets.metadata[sheet].category
 
-      // hacky workaround for mobos not indexing properly
-      // if (row.category === 'Mobos (ITX)') {
-      //   row.Chipset_INDEX = `${row.Brand} ${row.Chipset}`
-      // }
+      // Clean up GPU data, add some fields
       if (row.category === 'Graphics Cards') {
         const memoryMatch = row.Model.match(/\s(GDDR[^\s]+)/)
         row.Memory = memoryMatch ? memoryMatch[1] : '' // => GDDR6
@@ -77,17 +78,11 @@ async function refactorSheets (rawSheets) {
           row.INDEX = `${row.Brand} ${row.Model}`
           break
         case 'Mobos (ITX)':
-          row.INDEX = `${row.Brand} ${row.Chipset}`
-          row.INDEX_SECONDARY = `${row.Name}`
+          row.INDEX = `${row.Brand} ${row.Chipset} ${row.Name}`
           break
         case 'Graphics Cards': {
-          const cleanName = row.Name
-            .replaceAll(row.simpleModel, '')
-            .replaceAll('ROG Strix', 'Strix') // lmao asus
-          row.INDEX = `${row.Brand} ${row.simpleModel} ${cleanName}`
-          const cleanerName = cleanName
-            .replaceAll(/gaming/gi, '') // experimental, "gaming" in every single name skews results
-          row.INDEX_SECONDARY = `${cleanerName} ${row.simpleModel} ${row.Brand}`
+          const cleanName = row.Name.replaceAll(row.simpleModel, '')
+          row.INDEX = `${row.Brand} ${row.Model} ${cleanName}`
           break
         }
       }
@@ -96,27 +91,6 @@ async function refactorSheets (rawSheets) {
     }
   }
   return sheetsArray
-}
-
-// Index sheets into fuzzy search engine
-async function indexSheets (sheets) {
-  const options = {
-    // keys: config.sheets.indexes,
-    keys: ['INDEX', 'INDEX_SECONDARY'],
-    includeScore: true,
-    threshold: 0.4
-    // distance: 150
-  } // Configuration for fuzzy search index
-  // const index = Fuse.createIndex(config.sheets.indexes, sheets)
-  const fuse = new Fuse(sheets, options)
-  if (!fuse) return console.error('[SHEETS] Failed to index')
-
-  // Approximate size of index. For reference purposes.
-  let fuseSize = require('object-sizeof')(fuse)
-  fuseSize = ~~(fuseSize / 1e5) / 10
-  console.info(`[SHEETS] Indexed ${sheets.length} entries [${fuseSize} MB]`)
-
-  return fuse
 }
 
 exports.getSheets = getSheets

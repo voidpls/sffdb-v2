@@ -1,13 +1,12 @@
 require('dotenv').config()
-// const config = require('./config.js').config()
 const { BOT_TOKEN, BOT_PREFIX } = process.env
-const { Client, Collection, Intents } = require('discord.js')
-const fs = require('fs-extra')
+const { Client, Collection, GatewayIntentBits } = require('discord.js')
+const fs = require('fs').promises
 const sheets = require('./sheets.js')
 
 // Creates bot client
 const bot = new Client({
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 })
 
 // Loads commands into collection

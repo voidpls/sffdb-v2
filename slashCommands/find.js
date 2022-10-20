@@ -1,6 +1,7 @@
 const config = require('../config.js').config()
 const _ = require('lodash')
-const { MessageEmbed } = require('discord.js')
+const { EmbedBuilder } = require('discord.js')
+const fuzzysort = require('fuzzysort')
 const collectors = new Map() // All collectors, by user ID
 const { CHANNEL_WHITELIST } = process.env
 
@@ -27,18 +28,35 @@ exports.run = async (bot, int) => {
   }
 
   // Search index for matches
-  const res = bot.index.search(query)
-  if (res.length === 0) return await int.reply('No results found.')
-  if (res.length === 1) return await componentInfo(bot, int, res[0]) // 1 RESULT, NO PROMPTS
+  const sortOptions = {
+    key: 'INDEX',
+    threshold: -10000,
+    limit: 200
+  }
+  const sorted = fuzzysort
+    .go(query, bot.index, sortOptions)
+    .map(item => item.obj)
 
-  const categories = _.uniqBy(res, 'item.category').map(e => e.item.category)
+  if (sorted.length === 0) return await int.reply({ content: 'No results found.', ephemeral: true })
 
+  // 1 RESULT, NO PROMPTS
+  if (sorted.length === 1) {
+    // "[Initial] interaction responses are webhook messages.
+    // So it requires use external emojis permission enabled on the everyone role."
+    // To work without that permission, use an edit-response
+    await int.reply('** **')
+    return await componentInfo(bot, int, sorted[0])
+  }
+
+  const categories = _.uniqBy(sorted, 'category').map(item => item.category)
+
+  // 1 CATEGORY, ONLY COMPONENT SELECTION PROMPT
   if (categories.length === 1) {
-    return await selectComponent(bot, int, res, categories[0])
-  } // 1 CATEGORY, ONLY COMPONENT SELECTION PROMPT
+    return await selectComponent(bot, int, sorted, categories[0])
+  }
 
   // CATEGORY SELECTION PROMPT
-  return await selectCategory(bot, int, res, categories)
+  return await selectCategory(bot, int, sorted, categories)
 }
 
 // Category prompt
@@ -48,7 +66,7 @@ async function selectCategory (bot, int, res, categories) {
   } // Check if user already has active collector, disables it
   const desc = categories.map((c, i) => `\`[${i + 1}]\` ${c}`)
 
-  const categoryEmbed = new MessageEmbed()
+  const categoryEmbed = new EmbedBuilder()
     .setAuthor({
       name: bot.user.username,
       url: bot.user.avatarURL({ dynamic: true, size: 128, format: 'png' })
@@ -69,7 +87,7 @@ async function selectCategory (bot, int, res, categories) {
   const collector = await int.channel.createMessageCollector({
     filter,
     max: 1,
-    time: 30000
+    time: 60000
   })
   collectors.set(int.user.id, collector)
   // Process user input
@@ -88,22 +106,15 @@ async function selectComponent (bot, int, res, category) {
   if (collectors.get(int.user.id)) {
     collectors.get(int.user.id).stop('Collector overlap')
   } // Check if user already has active collector, disables it
-  const components = res.filter(entry => entry.item.category === category)
+  const components = res.filter(entry => entry.category === category)
   if (components.length === 1) return componentInfo(bot, int, components[0])
   if (components.length > 9) components.length = 9
-  // console.log(components)
+
   const desc = components.map((c, i) => {
-    // const brandKey = Object.keys(c.item).find(k =>
-    //   config.sheets.brandTitles.includes(k)
-    // )
-    // const modelKey = Object.keys(c.item).find(k =>
-    //   config.sheets.modelTitles.includes(k)
-    // )
-    // return `\`[${i + 1}]\` ${c.item[brandKey]} - ${c.item[modelKey]}`
     return `\`[${i + 1}]\` ${applyTemplate(c).title}`
   })
 
-  const componentEmbed = new MessageEmbed()
+  const componentEmbed = new EmbedBuilder()
     .setAuthor({
       name: bot.user.username,
       url: bot.user.avatarURL({ dynamic: true, size: 128, format: 'png' })
@@ -124,7 +135,7 @@ async function selectComponent (bot, int, res, category) {
   const collector = await int.channel.createMessageCollector({
     filter,
     max: 1,
-    time: 30000
+    time: 60000
   })
 
   collectors.set(int.user.id, collector)
@@ -139,17 +150,17 @@ async function selectComponent (bot, int, res, category) {
 }
 
 function applyTemplate (component) {
-  const template = config.sheets.formatting[component.item.category]
+  const template = config.sheets.formatting[component.category]
   if (!template) return null
 
   const title = template.title.replace(/{{(.*?)}}/gs, (match, $1) => {
-    if (!component.item[$1]) return '-'
-    return component.item[$1].replace(/\n/g, ' ')
+    if (!component[$1]) return '-'
+    return component[$1].replace(/\n/g, ' ')
   })
   const desc = template.desc.replace(/{{(.*?)}}/gs, (match, $1) => {
-    if (component.item[$1] === 'Y') return 'Yes'
-    if (!component.item[$1]) return '-'
-    return component.item[$1].replace(/\n/g, ' ')
+    if (component[$1] === 'Y') return 'Yes'
+    if (!component[$1]) return '-'
+    return component[$1].replace(/\n/g, ' ')
   })
 
   return { title, desc }
@@ -162,22 +173,12 @@ async function componentInfo (bot, int, component) {
 
   const formattedData = applyTemplate(component)
   if (!formattedData) {
-    const text = `Could not display info. Template type \`${component.item.category}\` not found.`
+    const text = `Could not display info. Template type \`${component.category}\` not found.`
     await (int.replied ? int.editReply(text) : int.reply(text))
   }
   const { title, desc } = formattedData
-  // console.log(template)
-  // Use regex to replace placeholders in template with real component data
-  // const title = formattedData.title.replace(/{{(.*?)}}/gs, (match, $1) => {
-  //   if (!component.item[$1]) return '-'
-  //   return component.item[$1].replace(/\n/g, ' ')
-  // })
-  // const desc = formattedData.desc.replace(/{{(.*?)}}/gs, (match, $1) => {
-  //   if (!component.item[$1]) return '-'
-  //   return component.item[$1].replace(/\n/g, ' ')
-  // })
 
-  const infoEmbed = new MessageEmbed()
+  const infoEmbed = new EmbedBuilder()
     .setAuthor({
       name: bot.user.username,
       url: bot.user.avatarURL({ dynamic: true, size: 128, format: 'png' })
@@ -186,7 +187,6 @@ async function componentInfo (bot, int, component) {
     .setDescription(desc)
     .setColor(config.bot.color)
     .setFooter({ text: 'Type "exit" to close this prompt' })
-
   // Collector filter
   const filter = m => {
     if (m.author.id !== int.user.id) return false
@@ -199,7 +199,7 @@ async function componentInfo (bot, int, component) {
   const collector = await int.channel.createMessageCollector({
     filter,
     max: 1,
-    time: 30000
+    time: 60000
   })
   collectors.set(int.user.id, collector)
   // Process user input
