@@ -110,6 +110,7 @@ exports.config = () => {
             '<:blank:858431977011281921> M.2 SSD Slots: {{M.2 (Key-M) NVMe/SATA SSD Slot\nGreen=Front\nRed=Back}}\n' +
             '<:blank:858431977011281921> SATA Ports: {{SATA 3.0 Ports}}\n' +
             '**PCIe Slots**: {{PCIe x16 Slot}}\n' +
+            '**BIOS Flashback**: {{BIOS Flashback}}\n' +
             '**Bifurcation**: {{PCIe Bifurcation Support}}\n' +
             '**Notes**: {{Remarks}}'
         },
