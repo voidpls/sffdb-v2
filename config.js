@@ -101,6 +101,7 @@ exports.config = () => {
             '**Socket/Chipset**: {{CPU}} {{Socket}} - {{Chipset}}\n' +
             '**OC Support (CPU/RAM)**: {{CPU Overclock}} / {{RAM Overclock}}\n' +
             '**RAM Support**: {{RAM Slots}} Slots - {{Supported RAM Capacity (GB)}}GB {{RAM Type}} - {{Supported Memory Speed (Mbps)}} MHz\n' +
+            '**VRM Phases**: {{Phase Configuration}}\n' +
             '**Connectivity**:\n' +
             '<:blank:858431977011281921> USB Ports: {{Total USB Ports}}\n' +
             '<:blank:858431977011281921> USB-C Header: {{USB-C Header}}\n' +
