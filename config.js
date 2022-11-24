@@ -49,8 +49,8 @@ exports.config = () => {
             '<:blank:858431977011281921> Clearance: {{CPU Cooler Height (mm)}}mm\n' +
             '<:blank:858431977011281921> AIO Support: {{AIO / Radiator Support}}\n' +
             '**GPU Support**:\n' +
-            '<:blank:858431977011281921> Thickness: {{GPU Height / Thickness (mm)}}mm / {{PCIe Slot}} slot(s)\n' +
-            '<:blank:858431977011281921> L×W: {{GPU Length (mm)}} × {{GPU Width (mm)}}mm\n' +
+            '<:blank:858431977011281921> L×W×H: {{GPU Length (mm)}} × {{GPU Width (mm)}} × {{GPU Height / Thickness (mm)}}mm \n' +
+            '<:blank:858431977011281921> PCIe Slots: {{PCIe Slot}} slot(s)\n' +
             '**PSU Support**: {{PSU}}\n' +
             // eslint-disable-next-line no-template-curly-in-string
             '**Price (USD)**: ${{Price (USD)}}'
