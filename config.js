@@ -4,6 +4,12 @@ exports.config = () => {
     bot: {
       color: 'e6e7e9' // Bot theme color (hex)
     },
+    // Configuration for links command
+    links: {
+      description: '[SFF PC Masterlist](https://bit.ly/30BJn2S) - by <@453436176490037250>\n' +
+      '[Compare SFF PC](https://comparesffpc.com/) - Compare SFF case sizes in 3D\n' +
+      '[CaseEnd](https://caseend.com/) - User friendly SFF case database'
+    },
     // Configuration for Google Sheets parsing
     sheets: {
       key: '1AddRvGWJ_f4B6UC7_IftDiVudVc8CJ8sxLUqlxVsCz4', // Key of the Google Sheets document
