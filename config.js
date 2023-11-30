@@ -66,10 +66,11 @@ exports.config = () => {
             '<:blank:858431977011281921> Count: {{Fans}} fan(s)\n' +
             '<:blank:858431977011281921> Size: {{Fan Size (mm)}}mm\n' +
             '<:blank:858431977011281921> Max Noise: {{Fan Noise (dB(A))}} dB(A)\n' +
-            '**CPU Block L×W×H**: {{CPU Block Length (mm)}} × {{CPU Block Width (mm)}} × {{CPU Block Height (mm)}}mm\n' +
-            // '<:blank:858431977011281921> Speed: {{Pump Speed (rpm)}} RPM\n' +
-            // '<:blank:858431977011281921> CPU Block Height: {{CPU Block Height (mm)}}mm\n'+
-            '**Pump Speed**: {{Pump Speed (rpm)}} RPM'
+            '**CPU Block**:\n' +
+            // '**CPU Block L×W×H**: {{CPU Block Length (mm)}} × {{CPU Block Width (mm)}} × {{CPU Block Height (mm)}}mm\n' +
+            '<:blank:858431977011281921> L×W×H: {{CPU Block Length (mm)}} × {{CPU Block Width (mm)}} × {{CPU Block Height (mm)}}mm\n' +
+            '<:blank:858431977011281921> Speed: {{Pump Speed (rpm)}} RPM'
+            // '**Pump Speed**: {{Pump Speed (rpm)}} RPM'
         },
         'Coolers (Air)': {
           title: '{{Brand}} {{Cooler}}',
@@ -123,7 +124,7 @@ exports.config = () => {
             '**VRAM**: {{Memory}} ({{Memory Speed (Gbps)}} Gbps)\n' +
             '**TDP**: {{TDP (W)}}W\n' +
             '**L × W:** {{Length (mm)}} × {{Width (mm)}}mm\n' +
-            '**Thickness (Height):** {{Thickness (mm)}}mm)\n' +
+            '**Thickness (Height):** {{Thickness (mm)}}mm\n' +
             '**GPU Fans**: {{Fans}}\n' +
             '**Watercooled**: {{Watercooled}}'
         }
