@@ -47,7 +47,7 @@ bot.once('ready', async () => {
   await sheets.getSheets(bot) // Initial fetching of the Google Sheets
   setInterval(async () => {
     await sheets.getSheets(bot)
-  }, 30 * 60000) // Fetches the Sheets again every 30 minutes
+  }, 30 * 60_000) // Fetches the Sheets again every 30 minutes
 })
 
 // Discord command handler
