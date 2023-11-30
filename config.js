@@ -60,7 +60,7 @@ exports.config = () => {
           desc:
             '**Type**: {{Radiator Type}}mm\n' +
             '**Radiator**:\n' +
-            '<:blank:858431977011281921> Dimensions: {{Radiator Length (mm)}}×{{Radiator Width (mm)}}×{{Radiator Thickness (mm)}}mm\n' +
+            '<:blank:858431977011281921> L×W×H: {{Radiator Length (mm)}} × {{Radiator Width (mm)}} × {{Radiator Thickness (mm)}}mm\n' +
             '<:blank:858431977011281921> Material: {{Radiator Material}}\n' +
             '**Fans**:\n' +
             '<:blank:858431977011281921> Count: {{Fans}} fan(s)\n' +
