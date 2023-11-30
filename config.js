@@ -69,7 +69,7 @@ exports.config = () => {
             '**CPU Block**:\n' +
             // '**CPU Block L×W×H**: {{CPU Block Length (mm)}} × {{CPU Block Width (mm)}} × {{CPU Block Height (mm)}}mm\n' +
             '<:blank:858431977011281921> L×W×H: {{CPU Block Length (mm)}} × {{CPU Block Width (mm)}} × {{CPU Block Height (mm)}}mm\n' +
-            '<:blank:858431977011281921> Speed: {{Pump Speed (rpm)}} RPM'
+            '<:blank:858431977011281921> Pump Speed: {{Pump Speed (rpm)}} RPM'
             // '**Pump Speed**: {{Pump Speed (rpm)}} RPM'
         },
         'Coolers (Air)': {
@@ -123,8 +123,8 @@ exports.config = () => {
             '**Boost Clock**: {{Boost Clock (MHz)}} Mhz\n' +
             '**VRAM**: {{Memory}} ({{Memory Speed (Gbps)}} Gbps)\n' +
             '**TDP**: {{TDP (W)}}W\n' +
-            '**L × W:** {{Length (mm)}} × {{Width (mm)}}mm\n' +
-            '**Thickness (Height):** {{Thickness (mm)}}mm\n' +
+            '**L × W**: {{Length (mm)}} × {{Width (mm)}}mm\n' +
+            '**Thickness (Height)**: {{Thickness (mm)}}mm\n' +
             '**GPU Fans**: {{Fans}}\n' +
             '**Watercooled**: {{Watercooled}}'
         }
