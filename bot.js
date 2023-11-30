@@ -1,6 +1,6 @@
 require('dotenv').config()
 const { BOT_TOKEN, BOT_PREFIX } = process.env
-const { Client, Collection, GatewayIntentBits } = require('discord.js')
+const { Client, Collection, GatewayIntentBits, ChannelType } = require('discord.js')
 const fs = require('fs').promises
 const sheets = require('./sheets.js')
 
@@ -53,14 +53,15 @@ bot.once('ready', async () => {
 // Discord command handler
 bot.on('messageCreate', async msg => {
   if (msg.author.id === bot.user.id || msg.author.bot) return
+  console.log(msg.channel.type)
   const allowedChannelTypes = [
-    'GUILD_TEXT',
-    'GUILD_PUBLIC_THREAD',
-    'GUILD_PRIVATE_THREAD'
+    ChannelType.GuildText,
+    ChannelType.PublicThread,
+    ChannelType.PrivateThread
   ]
   if (!allowedChannelTypes.includes(msg.channel.type)) return
-
   if (!msg.content.startsWith(BOT_PREFIX)) return
+
   const prefixless = msg.content
     .slice(BOT_PREFIX.length)
     .trim()

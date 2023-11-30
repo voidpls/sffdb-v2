@@ -6,7 +6,7 @@ exports.run = async (bot, msg, args) => {
       slashCommand.info.data
     )
     if (command) {
-      console.log(`[DISCORD] Deployed slash command: ${command.name}`)
+      console.info(`[DISCORD] Deployed slash command: ${command.name}`)
       await msg.channel.send(`Deployed slash command: \`${command.name}\``)
     }
   }) // Register slash commands globally
