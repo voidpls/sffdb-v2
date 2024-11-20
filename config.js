@@ -87,7 +87,7 @@ exports.config = () => {
             '<:blank:858431977011281921> Count: {{Fans}} fan(s)\n' +
             '<:blank:858431977011281921> Size: {{Fan Size (mm)}}mm\n' +
             '<:blank:858431977011281921> Speed: {{Max Fan Speed (RPM)}} RPM\n' +
-            '<:blank:858431977011281921> Airflow/SP: {{Max Air Flow (CFM)}} CFM / {{Max Static Pressure (mmH2O)}} mmH20\n' +
+            '<:blank:858431977011281921> Airflow/SP: {{Max Air Flow (CFM)}} CFM / {{Max Static Pressure (mmH2O)}} mmH2O\n' +
             '<:blank:858431977011281921> Max Noise: {{Max Noise (dB(A))}} dB(A)\n' +
             '**Heatsink**:\n' +
             '<:blank:858431977011281921> Material: {{Heatsink Material}}\n' +
@@ -99,7 +99,7 @@ exports.config = () => {
           desc:
             '**Size**: {{Fan Size (mm)}}x{{Thickness (mm)}}mm\n' +
             '**Max Speed**: {{Max Fan Speed (rpm)}} RPM\n' +
-            '**Airflow/SP**: {{Max Air Flow (CFM)}} CFM / {{Max Static Pressure (mmH2O)}} mmH20\n' +
+            '**Airflow/SP**: {{Max Air Flow (CFM)}} CFM / {{Max Static Pressure (mmH2O)}} mmH2O\n' +
             '**Max Noise**: {{Max Noise (dB(A))}} dB(A)\n' +
             '**PWM / DC**: {{PWM / DC}}'
         },
